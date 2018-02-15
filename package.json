@@ -1,0 +1,13 @@
+{
+  "name": "acvbotapi",
+  "version": "0.1.0",
+  "devDependencies": {
+    "@types/config": "^0.0.34",
+    "@types/node": "^9.4.6",
+    "@types/request": "^2.47.0"
+  },
+  "dependencies": {
+    "config": "^1.29.4",
+    "request": "^2.83.0"
+  }
+}

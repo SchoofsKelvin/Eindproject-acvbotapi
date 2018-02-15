@@ -1,0 +1,16 @@
+
+logs
+*.log
+
+pids
+node_modules
+yarn.lock
+package-lock.json
+.npm
+
+*.dat
+
+.vscode
+.DS_Store
+
+build
