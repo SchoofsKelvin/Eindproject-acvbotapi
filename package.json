@@ -1,6 +1,10 @@
 {
   "name": "acvbotapi",
   "version": "0.1.0",
+  "author": {
+    "name": "Kelvin Schoofs",
+    "email": "schoofs.kelvin@gmail.com"
+  },
   "devDependencies": {
     "@types/config": "^0.0.34",
     "@types/node": "^9.4.6",
