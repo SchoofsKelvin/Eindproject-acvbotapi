@@ -53,8 +53,8 @@ export default class Conversation extends EventEmitter {
       this.token = token;
       this.expiresIn = expires_in;
       this.watermark = null;
-      this.startInterval();
       this.emit('connected');
+      this.startInterval();
     });
   }
 
