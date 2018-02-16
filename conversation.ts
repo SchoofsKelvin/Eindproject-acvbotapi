@@ -16,7 +16,7 @@ const HEADERS = {
 
 export default class Conversation extends EventEmitter {
 
-  private static EVENT_NAMES = ['connected','started','stopped','message'];
+  private static EVENT_NAMES = ['connected', 'started', 'stopped', 'message'];
 
   public userId: string = '';
   public userName: string = 'user';
@@ -36,7 +36,7 @@ export default class Conversation extends EventEmitter {
   }
 
   public eventNames() {
-    return Conversation.EVENT_NAMES;
+    return [...Conversation.EVENT_NAMES];
   }
 
   public create() {
