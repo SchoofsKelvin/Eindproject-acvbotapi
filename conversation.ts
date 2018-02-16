@@ -6,7 +6,6 @@ import { EventEmitter } from 'events';
 import { IActivity, INameAndId } from './activity';
 
 const DIRECT_LINE = config.get<string>('directLineUrl');
-const USER_ID = config.get<string>('userId');
 const SECRET = config.get<string>('secret');
 
 const HEADERS = {
