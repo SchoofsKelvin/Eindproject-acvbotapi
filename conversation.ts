@@ -62,14 +62,14 @@ export default class Conversation extends EventEmitter {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
-      this.emit('started');
+      this.emit('stopped');
     }
   }
 
   public startInterval() {
     this.stopInterval();
     this.timer = setInterval(() => this.update(), 1000);
-    this.emit('stopped');
+    this.emit('started');
   }
 
   public sendMessage(message: string) {
