@@ -13,5 +13,5 @@ package-lock.json
 .vscode
 .DS_Store
 
-dist
+# dist
 docs
