@@ -83,7 +83,7 @@ export default class Conversation extends EventEmitter {
     request.post(`${DIRECT_LINE}/conversations`, { headers }, (error: any, response: request.Response, body: any) => {
       // console.log('Body', typeof body, body);
       const data = parseJSON(body);
-      if (!data) throw new Error('Couldn\'t parse JSON: ' + body);
+      if (!data) return console.error(new Error('Couldn\'t parse JSON: ' + body));
       if (error) return console.error(error);
       if (data.error) return console.error(data.error);
       const { conversationId, token, expires_in } = data;
@@ -144,7 +144,7 @@ export default class Conversation extends EventEmitter {
     request.post(url, { headers, json }, (error: any, response: request.Response, body: any) => {
       // console.log('Body', typeof body, body);
       const data = parseJSON(body);
-      if (!data) throw new Error('Couldn\'t parse JSON: ' + body);
+      if (!data) return console.error(new Error('Couldn\'t parse JSON: ' + body));
       if (error) return console.error(error);
       if (data.error) return console.error(data.error);
     });
@@ -174,7 +174,7 @@ export default class Conversation extends EventEmitter {
     request.get(url, { headers }, (error: any, response: request.Response, body: any) => {
       // console.log('Body', typeof body, body);
       const data = parseJSON(body);
-      if (!data) throw new Error('Couldn\'t parse JSON: ' + body);
+      if (!data) return console.error(new Error('Couldn\'t parse JSON: ' + body));
       if (error) return console.error(error);
       if (data.error) return console.error(data.error);
       this.watermark = data.watermark;
