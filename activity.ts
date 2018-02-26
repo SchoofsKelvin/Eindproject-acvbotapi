@@ -81,4 +81,5 @@ export interface IActivity {
   text: string;
   replyToId: string;
   attachments: IAttachment[];
+  channelData: {[key: string]: any};
 }
