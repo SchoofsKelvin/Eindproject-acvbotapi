@@ -52,6 +52,7 @@ export default class Conversation extends EventEmitter {
   private watermark: number | null = null;
 
   private timer: NodeJS.Timer | null = null;
+  private lastUpdate: [number, number] = [0, 0];
   private hasSentMessage = false;
 
   constructor(conversationId?: string) {
@@ -126,6 +127,7 @@ export default class Conversation extends EventEmitter {
   public startInterval() {
     this.stopInterval();
     this.timer = setInterval(() => this.update(), 2000);
+    this.lastUpdate = process.hrtime();
     this.emit('started');
   }
 
@@ -142,6 +144,7 @@ export default class Conversation extends EventEmitter {
       from: { id: this.userId, name: this.userName },
     };
     this.hasSentMessage = true;
+    this.lastUpdate = process.hrtime();
     let tries = 1;
     const headers = { ...HEADERS, Cookie: `UserId=${this.userId}`, token: this.token };
     const doRequest: () => void = () => tries-- && request.post(url, { headers, json }, (error: any, response: request.Response, body: any) => {
@@ -173,6 +176,8 @@ export default class Conversation extends EventEmitter {
    * Called by the interval started with startInterval
    */
   protected update() {
+    const time = process.hrtime(this.lastUpdate);
+    if (time[0] > 30) this.stopInterval();
     let tries = 1;
     const url = `${DIRECT_LINE}/conversations/${this.conversationId}/activities?watermark=${this.watermark || ''}`;
     const headers = { ...HEADERS, Cookie: `UserId=${this.userId}`, token: this.token };
@@ -183,6 +188,8 @@ export default class Conversation extends EventEmitter {
       if (!data) return (console.error(`Tries=${tries}`, new Error('Couldn\'t parse JSON: ' + body)), doRequest());
       if (data.error) return (console.error(`Tries=${tries}`, data.error), doRequest());
       this.watermark = data.watermark;
+      if (!data.activities.length) return;
+      this.lastUpdate = process.hrtime();
       data.activities.forEach((act: IActivity) => {
         switch (act.type) {
           case 'message':

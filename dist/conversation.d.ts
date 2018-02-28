@@ -26,6 +26,7 @@ export default class Conversation extends EventEmitter {
     private expiresIn;
     private watermark;
     private timer;
+    private lastUpdate;
     private hasSentMessage;
     constructor(conversationId?: string);
     /**
