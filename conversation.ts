@@ -79,13 +79,14 @@ export default class Conversation extends EventEmitter {
    */
   public create() {
     // TODO: Clear current conversation (and interval) if one exists
+    let tries = 3;
     const headers = { ...HEADERS, Cookie: `UserId=${this.userId}`, token: this.token };
-    request.post(`${DIRECT_LINE}/conversations`, { headers }, (error: any, response: request.Response, body: any) => {
+    const doRequest: () => void = () => --tries && request.post(`${DIRECT_LINE}/conversations`, { headers }, (error: any, response: request.Response, body: any) => {
       // console.log('Body', typeof body, body);
+      if (error) return (console.error(`Tries=${tries}`, error), doRequest());
       const data = parseJSON(body);
-      if (!data) return console.error(new Error('Couldn\'t parse JSON: ' + body));
-      if (error) return console.error(error);
-      if (data.error) return console.error(data.error);
+      if (!data) return (console.error(`Tries=${tries}`, new Error('Couldn\'t parse JSON: ' + body)), doRequest());
+      if (data.error) return (console.error(`Tries=${tries}`, data.error), doRequest());
       const { conversationId, token, expires_in } = data;
       this.conversationId = conversationId;
       this.token = token;
@@ -94,6 +95,7 @@ export default class Conversation extends EventEmitter {
       this.emit('connected');
       this.startInterval();
     });
+    doRequest();
   }
 
   /** @returns The conversationId */
@@ -140,13 +142,14 @@ export default class Conversation extends EventEmitter {
       from: { id: this.userId, name: this.userName },
     };
     this.hasSentMessage = true;
+    let tries = 3;
     const headers = { ...HEADERS, Cookie: `UserId=${this.userId}`, token: this.token };
-    request.post(url, { headers, json }, (error: any, response: request.Response, body: any) => {
+    const doRequest: () => void = () => --tries && request.post(url, { headers, json }, (error: any, response: request.Response, body: any) => {
       // console.log('Body', typeof body, body);
+      if (error) return (console.error(`Tries=${tries}`, error), doRequest());
       const data = parseJSON(body);
-      if (!data) return console.error(new Error('Couldn\'t parse JSON: ' + body));
-      if (error) return console.error(error);
-      if (data.error) return console.error(data.error);
+      if (!data) return (console.error(`Tries=${tries}`, new Error('Couldn\'t parse JSON: ' + body)), doRequest());
+      if (data.error) return (console.error(`Tries=${tries}`, data.error), doRequest());
     });
   }
 
@@ -169,14 +172,15 @@ export default class Conversation extends EventEmitter {
    * Called by the interval started with startInterval
    */
   protected update() {
+    let tries = 3;
     const url = `${DIRECT_LINE}/conversations/${this.conversationId}/activities?watermark=${this.watermark || ''}`;
     const headers = { ...HEADERS, Cookie: `UserId=${this.userId}`, token: this.token };
-    request.get(url, { headers }, (error: any, response: request.Response, body: any) => {
+    const doRequest: () => void = () => --tries && request.get(url, { headers }, (error: any, response: request.Response, body: any) => {
       // console.log('Body', typeof body, body);
+      if (error) return (console.error(`Tries=${tries}`, error), doRequest());
       const data = parseJSON(body);
-      if (!data) return console.error(new Error('Couldn\'t parse JSON: ' + body));
-      if (error) return console.error(error);
-      if (data.error) return console.error(data.error);
+      if (!data) return (console.error(`Tries=${tries}`, new Error('Couldn\'t parse JSON: ' + body)), doRequest());
+      if (data.error) return (console.error(`Tries=${tries}`, data.error), doRequest());
       this.watermark = data.watermark;
       data.activities.forEach((act: IActivity) => {
         switch (act.type) {
