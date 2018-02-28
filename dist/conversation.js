@@ -114,7 +114,7 @@ class Conversation extends events_1.EventEmitter {
      */
     startInterval() {
         this.stopInterval();
-        this.timer = setInterval(() => this.update(), 1000);
+        this.timer = setInterval(() => this.update(), 2000);
         this.emit('started');
     }
     /**
