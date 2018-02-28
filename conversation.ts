@@ -151,6 +151,7 @@ export default class Conversation extends EventEmitter {
       if (!data) return (console.error(`Tries=${tries}`, new Error('Couldn\'t parse JSON: ' + body)), doRequest());
       if (data.error) return (console.error(`Tries=${tries}`, data.error), doRequest());
     });
+    doRequest();
   }
 
   /**
@@ -194,6 +195,7 @@ export default class Conversation extends EventEmitter {
         }
       });
     });
+    doRequest();
   }
 }
 
