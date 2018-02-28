@@ -144,7 +144,7 @@ export default class Conversation extends EventEmitter {
       from: { id: this.userId, name: this.userName },
     };
     this.hasSentMessage = true;
-    this.lastUpdate = process.hrtime();
+    this.startInterval();
     let tries = 1;
     const headers = { ...HEADERS, Cookie: `UserId=${this.userId}`, token: this.token };
     const doRequest: () => void = () => tries-- && request.post(url, { headers, json }, (error: any, response: request.Response, body: any) => {
@@ -189,7 +189,7 @@ export default class Conversation extends EventEmitter {
       if (data.error) return (console.error(`Tries=${tries}`, data.error), doRequest());
       this.watermark = data.watermark;
       if (!data.activities.length) return;
-      this.lastUpdate = process.hrtime();
+      this.startInterval();
       data.activities.forEach((act: IActivity) => {
         switch (act.type) {
           case 'message':
