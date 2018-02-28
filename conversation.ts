@@ -81,7 +81,7 @@ export default class Conversation extends EventEmitter {
     // TODO: Clear current conversation (and interval) if one exists
     let tries = 3;
     const headers = { ...HEADERS, Cookie: `UserId=${this.userId}`, token: this.token };
-    const doRequest: () => void = () => --tries && request.post(`${DIRECT_LINE}/conversations`, { headers }, (error: any, response: request.Response, body: any) => {
+    const doRequest: () => void = () => tries-- && request.post(`${DIRECT_LINE}/conversations`, { headers }, (error: any, response: request.Response, body: any) => {
       // console.log('Body', typeof body, body);
       if (error) return (console.error(`Tries=${tries}`, error), doRequest());
       const data = parseJSON(body);
@@ -142,9 +142,9 @@ export default class Conversation extends EventEmitter {
       from: { id: this.userId, name: this.userName },
     };
     this.hasSentMessage = true;
-    let tries = 3;
+    let tries = 1;
     const headers = { ...HEADERS, Cookie: `UserId=${this.userId}`, token: this.token };
-    const doRequest: () => void = () => --tries && request.post(url, { headers, json }, (error: any, response: request.Response, body: any) => {
+    const doRequest: () => void = () => tries-- && request.post(url, { headers, json }, (error: any, response: request.Response, body: any) => {
       // console.log('Body', typeof body, body);
       if (error) return (console.error(`Tries=${tries}`, error), doRequest());
       const data = parseJSON(body);
@@ -173,10 +173,10 @@ export default class Conversation extends EventEmitter {
    * Called by the interval started with startInterval
    */
   protected update() {
-    let tries = 3;
+    let tries = 1;
     const url = `${DIRECT_LINE}/conversations/${this.conversationId}/activities?watermark=${this.watermark || ''}`;
     const headers = { ...HEADERS, Cookie: `UserId=${this.userId}`, token: this.token };
-    const doRequest: () => void = () => --tries && request.get(url, { headers }, (error: any, response: request.Response, body: any) => {
+    const doRequest: () => void = () => tries-- && request.get(url, { headers }, (error: any, response: request.Response, body: any) => {
       // console.log('Body', typeof body, body);
       if (error) return (console.error(`Tries=${tries}`, error), doRequest());
       const data = parseJSON(body);
